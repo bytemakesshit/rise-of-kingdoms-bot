@@ -1,2 +1,3 @@
 # rise-of-kingdoms-scout-bot
-(HELP WANTED!) Scouting bot for rise of kingdoms built with opencv and numpy.
+
+# Not finished yet, need to work on the image recognition with the scout camp stuff, it's broken so if you know anything about open cv, contact me so I can make a full release :)

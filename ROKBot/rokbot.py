@@ -17,8 +17,9 @@ blue_available_path = 'images/scouts/blue_available.jpg'
 
 explore_button_path = 'images/explore_button.jpg'
 in_menu_path = 'images/in_menu.jpg'
+send_scout_button_path = 'images/send_scout_button.jpg'
 
-find_image_threshold = 0.6
+find_image_threshold = 0.5
 
 check_devices = os.system('adb devices > NUL')
 
@@ -85,25 +86,6 @@ def send_scouts(x, y):
         print(f'> Clicked coordinates X: {coordinates[0]} Y: {coordinates[1]}')
 
 
-def check_scouts(scout_camp_image):
-    if find_image(image=scout_camp_image, image_to_look_for=both_scouts_out_path, threshold=find_image_threshold):
-        print('> No scout available')
-        return str('none')
-
-    if find_image(image=scout_camp_image, image_to_look_for=both_scouts_available_path, threshold=find_image_threshold):
-        print('> Both scouts available')
-        return str('both')
-
-    if find_image(image=scout_camp_image, image_to_look_for=purple_available_path, threshold=find_image_threshold):
-        print('> Purple scout available')
-        return str('purple')
-
-    if find_image(image=scout_camp_image, image_to_look_for=blue_available_path, threshold=find_image_threshold):
-        print('> Blue scout available')
-        return str('blue')
-    
-    else:
-        return str('Something has fucked up')
 
 def new_frame():
     delete_screenshot()
@@ -130,7 +112,7 @@ def get_scout_camp():
     click_position(x=963, y=477)
     print('> Clicked scout camp')
     time.sleep(1)
-    click_position(x=1146, y=669)
+    click_position(x=1090, y=604)
     print('> Clicked scout camp ui')
 
 def check_for_menu():
@@ -160,36 +142,42 @@ def main():
         get_scout_camp()
         time.sleep(1)
         new_frame()
-        scout_availability = check_scouts(scout_camp_image=screenshot_path)
 
-        if 'purple' in scout_availability:
-            send_scouts(x=1251, y=393)
-            time.sleep(1.5)
-            click_position(x=1518, y=109)
-            time.sleep(1)
-            click_position(x=1260, y=207)
+        
+        coordinates_scouts = get_location(image=screenshot_path, image_to_look_for=explore_button_path, threshold=0.7)
+        if coordinates_scouts is None:
+            continue
+        
+        print(f'> Clicked | X: {coordinates_scouts[0]} | Y: {coordinates_scouts[1]}')
+
+        click_position(x=coordinates_scouts[0], y=coordinates_scouts[1])
+        time.sleep(1.5)
+        new_frame()
+
+        time.sleep(0.5)
+
+        coordinates_scouts = get_location(image=screenshot_path, image_to_look_for=explore_button_path, threshold=0.7)
+        if coordinates_scouts is None:
+            continue
+        print(f'> Clicked | X: {coordinates_scouts[0]} | Y: {coordinates_scouts[1]}')
+        
+        click_position(x=coordinates_scouts[0], y=coordinates_scouts[1])
+        time.sleep(1.5)
+        new_frame()
+
+        time.sleep(0.5)
+
+        coordinates_scouts = get_location(image=screenshot_path, image_to_look_for=send_scout_button_path, threshold=0.7)
+        
+        if coordinates_scouts is None:
             continue
 
-        if 'blue' in scout_availability:
-            send_scouts(x=1251, y=565)
-            time.sleep(1.5)
-            click_position(x=1518, y=262)
-            time.sleep(1)
-            click_position(x=1260, y=360)
-            continue
+        print(f'> Clicked | X: {coordinates_scouts[0]} | Y: {coordinates_scouts[1]}')
 
-        if 'both' in scout_availability:
-            send_scouts(x=1251, y=393)
-            time.sleep(1.5)
-            click_position(x=1518, y=109)
-            time.sleep(1)
-            click_position(x=1260, y=207)
-            continue
+        click_position(x=coordinates_scouts[0], y=coordinates_scouts[1])
 
-        if 'none' in scout_availability:
-            continue
+        print('> Looping')
+        continue
 
-        else:
-            print(scout_availability)
-
+        
 main()

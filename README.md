@@ -9,7 +9,7 @@
 # Setup Guide
 
 ## Enable ADB on your chosen emulator
-<img src="assets/bluestacks_adb.png">
+<img src="Assets/bluestacks_adb.png">
 
 ## Set your screen resolution to 1600x900
 

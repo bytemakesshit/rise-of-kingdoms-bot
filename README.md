@@ -24,5 +24,14 @@
 ## Open a terminal in the directory 'ROKBOT' and type/run 'rokbot.py'
 <img src="Assets/command_run.png">
 
+# To-do
+```
+Tutorial Bot
+Barbarian Spawner
+Discord integration
+GUI or Webpanel
+Village/Cave claimer
+```
+
 # Disclaimer: I am not responsible for you getting banned, run this program at your own risk.
 

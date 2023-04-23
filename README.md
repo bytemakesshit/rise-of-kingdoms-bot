@@ -23,7 +23,7 @@
 ## Run installation.bat 
 <img src="Assets/install_modules.png">
 
-## Open a terminal in the directory 'ROKBOT' and type/run 'rokbot.py'
+## Open a terminal in the directory 'ROKBOT' and type/run ```rokbot.py```
 <img src="Assets/command_run.png">
 
 # To-do

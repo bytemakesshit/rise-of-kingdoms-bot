@@ -1,9 +1,0 @@
-{
-    "port": "5865",
-    
-    "notifications": false,
-    "webhook": "<3",
-
-    "custom_coordinates": true
-
-}

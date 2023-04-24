@@ -39,11 +39,14 @@ purple_available_path = 'images/scouts/purple_available.jpg'
 blue_available_path = 'images/scouts/blue_available.jpg'
 
 explore_button_path = 'images/explore_button.jpg'
+explore_fog_button_path = 'images/explore_fog_button.jpg'
 in_menu_path = 'images/in_menu.jpg'
 send_scout_button_path = 'images/send_scout_button.jpg'
 
 verification_menu_path = 'images/verification_menu.png'
 verification_notification_path = 'images/verification_notification.png'
+
+barb_level_6 = 'images/barb_levels/barb_level_6.jpg'
 
 find_image_threshold = 0.5
 
@@ -106,67 +109,38 @@ def screenshot_pull():
     screenshot()
     pull_image()
 
-def send_scouts(x, y):
-
-    click_position(x=x, y=y)
-    time.sleep(1.2)
-
-    new_frame()
-    time.sleep(0.5)
-    coordinates = get_location(image=screenshot_path, image_to_look_for=explore_button_path, threshold=0.8)
-
-    if coordinates is not None:
-        print('> Found explore button')
-        click_position(x=coordinates[0], y=coordinates[1])
-        print(f'> Clicked coordinates X: {coordinates[0]} Y: {coordinates[1]}')
-
 def new_frame():
     delete_screenshot()
-
     screenshot()
     pull_image()
-
-def go_home():
-    if get_location(image=screenshot_path, image_to_look_for=home_path, threshold=0.8) is not None:
-        return True
-
-    else:
-        return False
-
-def check_for_menu():
-    if get_location(image=screenshot_path, image_to_look_for=in_menu_path, threshold=0.8) is not None:
-        return True
-    
-    else:
-        return False
 
 def automatic_scout():
     try:
         while True:
             new_frame()
             time.sleep(0.3)
-            if check_for_menu():
+            if get_location(image=screenshot_path, image_to_look_for=in_menu_path, threshold=0.8) is not None:
                 print('> Exiting menu')
                 click_position(x=1366, y=103)
 
-            for i in range(5):
+            for i in range(2):
                 new_frame()
                 if get_location(image=screenshot_path, image_to_look_for=verification_notification_path, threshold=0.8) is not None:
                     if notifications:
                         with open(screenshot_path, "rb") as data:
                             file_data = data.read()
-                        requests.post('https://discord.com/api/webhooks/1098878588939415582/zmwEC5SYwyKAd0mKIfU0QDVQv3ahvoxdFfUdrZb78CvgYrw7fOIYRHDz41qyX8HHFW86', data={'content': '@everyone captcha detected wakey wakey cunt'}, files={"file": ("screenshot.png", file_data)})
+                        requests.post(webhook, data={'content': '@everyone captcha detected wakey wakey cunt'}, files={"file": ("screenshot.png", file_data)})
 
                     input('> Captcha detected, please fill it out, then press enter: ')
                     break
 
-            for i in range(5):
+            for i in range(2):
                 new_frame()
                 if get_location(image=screenshot_path, image_to_look_for=verification_menu_path, threshold=0.8) is not None:
                     if notifications:
                         with open(screenshot_path, "rb") as data:
                             file_data = data.read()
-                        requests.post('https://discord.com/api/webhooks/1098878588939415582/zmwEC5SYwyKAd0mKIfU0QDVQv3ahvoxdFfUdrZb78CvgYrw7fOIYRHDz41qyX8HHFW86', data={'content': '@everyone captcha detected wakey wakey cunt'}, files={"file": ("screenshot.png", file_data)})
+                        requests.post(webhook, data={'content': '@everyone captcha detected wakey wakey cunt'}, files={"file": ("screenshot.png", file_data)})
 
                     input('> Captcha detected, please fill it out, then press enter: ')
                     break
@@ -174,7 +148,7 @@ def automatic_scout():
             time.sleep(0.5)
             new_frame()
             
-            if go_home():
+            if get_location(image=screenshot_path, image_to_look_for=home_path, threshold=0.8) is not None:
                 print('> Returning home')
                 click_position(x=81, y=816)
                 
@@ -183,7 +157,7 @@ def automatic_scout():
             print('> Clicked scout camp')
 
             time.sleep(0.5)
-            click_position(x=1090, y=604)
+            click_position(x=scout_camp_ui_x, y=scout_camp_ui_y)
             print('> Clicked scout camp ui')
             
             while True:
@@ -197,19 +171,16 @@ def automatic_scout():
             print(f'> Clicked a scout')
 
             while True:
-                time.sleep(1)
                 new_frame()
-                time.sleep(0.2)
-                coordinates_scouts = get_location(image=screenshot_path, image_to_look_for=explore_button_path, threshold=0.7)
+                time.sleep(0.5)
+                coordinates_scouts = get_location(image=screenshot_path, image_to_look_for=explore_fog_button_path, threshold=0.7)
                 if coordinates_scouts is not None:
                     break
 
-            
+            time.sleep(0.2)
             click_position(x=coordinates_scouts[0], y=coordinates_scouts[1])
             print(f'> Clicked explore button')
             
-            time.sleep(0.5)
-
             while True:
                 new_frame()
                 time.sleep(0.5)
@@ -219,12 +190,22 @@ def automatic_scout():
 
             click_position(x=coordinates_scouts[0], y=coordinates_scouts[1])
             print(f'> Sent scout')
-
             print('> Looping')
             continue
     
     except KeyboardInterrupt:
         rokbot()
+
+def barb_chaining():
+    while True:
+        new_frame()
+        time.sleep(0.3)
+        coordinates_scouts = get_location(image=screenshot_path, image_to_look_for=barb_level_6, threshold=0.7)
+        if coordinates_scouts is not None:
+            break
+    
+    print(f'X: {coordinates_scouts[0]} Y: {coordinates_scouts[1]}')
+
 
 def frame_generator():
     iteration = 0
@@ -238,18 +219,18 @@ def frame_generator():
         time.sleep(0.3)
 
 def rokbot():
-    clear()
-    print('1 => Scoutbot\n2 => Screenshot Screen')
+    print('1 => Scoutbot\n2 => Screenshot Screen\n3 => Barb Chaining')
     script_choice = str(input('> '))
     match script_choice:
         case '1':
-            clear()
             automatic_scout()
 
         case '2':
-            clear()
             screenshot_pull()
             print('> Screenshot should be located in images/screenshot.png')
+
+        case '3':
+            print('> In production')
 
         case _:
             print('> Invalid script, press enter to return: ')
